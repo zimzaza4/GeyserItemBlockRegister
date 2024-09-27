@@ -28,6 +28,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
     api 'org.geysermc.geyser:api:2.2.0-SNAPSHOT'
+    compileOnly(files("/libs/Geyser-Standalone.jar"))
     compileOnly('com.fasterxml.jackson.core:jackson-databind:2.14.0')
     implementation 'org.yaml:snakeyaml:1.30'
 }

@@ -17,7 +17,7 @@ public class SimpleAddonBlocksReader {
     public static final JsonMapper MAPPER = new JsonMapper();
 
     public List<CustomBlockData> readBlocks(Path root) throws IOException {
-        System.out.println("Start read");
+        // System.out.println("Start read");
         List<CustomBlockData> dataList = new ArrayList<>();
         try (Stream<Path> stream = Files.walk(root)) {
             stream.forEach(path -> {
@@ -113,13 +113,6 @@ public class SimpleAddonBlocksReader {
                 .ambientOcclusion(ambientOcclusion)
                 .build();
     }
-
-    /**
-     * Creates the list of {@link PlacementConditions} for the passed conditions node
-     *
-     * @param node the conditions node
-     * @return the list of {@link PlacementConditions}
-     */
     private List<PlacementConditions> createPlacementFilterComponent(JsonNode node) {
         List<PlacementConditions> conditions = new ArrayList<>();
 
