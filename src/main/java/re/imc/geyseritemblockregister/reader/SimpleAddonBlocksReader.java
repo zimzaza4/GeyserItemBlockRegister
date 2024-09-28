@@ -70,7 +70,7 @@ public class SimpleAddonBlocksReader {
                         }
                         dataList.add(blobkBuilder.components(componentsBuilder.build())
                                 .build());
-                        System.out.println("Loaded " + path.toFile().getName());
+
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
