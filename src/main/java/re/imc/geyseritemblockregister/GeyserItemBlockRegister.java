@@ -54,6 +54,9 @@ public class GeyserItemBlockRegister implements Extension {
 
                         while (iter.hasNext()) {
                             Object customItemOption = iter.next();
+                            if (customItemOption == null) {
+                                return;
+                            }
                             Method getFirstMethod = customItemOption.getClass().getMethod("first");
                             Method getSecondMethod = customItemOption.getClass().getMethod("second");
                             CustomItemOptions options = (CustomItemOptions) getFirstMethod.invoke(customItemOption);
@@ -94,10 +97,10 @@ public class GeyserItemBlockRegister implements Extension {
         try {
             PlatformType type = GeyserImpl.getInstance().platformType();
 
-            String prefix = type == PlatformType.STANDALONE || type == PlatformType.VELOCITY ? "" : "org.geysermc.geyser.platform." + type.platformName().toLowerCase() + ".shaded.";
+            String prefix = (type == PlatformType.STANDALONE || type == PlatformType.VELOCITY) ? "" : "org.geysermc.geyser.platform." + type.platformName().toLowerCase() + ".shaded.";
 
             Class<?> pairClass = Class.forName(prefix + "it.unimi.dsi.fastutil.Pair");
-            Method ofMethod = pairClass.getDeclaredMethod("of", CustomItemOptions.class, ItemDefinition.class);
+            Method ofMethod = pairClass.getDeclaredMethod("of", Object.class, Object.class);
             return ofMethod.invoke(null, first, second);
         } catch (Exception e) {
             logger().error("Could not create Pair: ", e);
