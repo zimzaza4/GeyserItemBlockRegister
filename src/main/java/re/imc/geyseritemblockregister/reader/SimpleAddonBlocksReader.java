@@ -4,20 +4,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.geysermc.geyser.api.block.custom.CustomBlockData;
 import org.geysermc.geyser.api.block.custom.component.*;
+import org.geysermc.geyser.api.extension.ExtensionLogger;
 import org.geysermc.geyser.api.util.CreativeCategory;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public class SimpleAddonBlocksReader {
 
     public static final JsonMapper MAPPER = new JsonMapper();
 
-    public List<CustomBlockData> readBlocks(Path root) throws IOException {
-        // System.out.println("Start read");
+    public List<CustomBlockData> readBlocks(Path root, ExtensionLogger logger) throws IOException {
+
         List<CustomBlockData> dataList = new ArrayList<>();
         try (Stream<Path> stream = Files.walk(root)) {
             stream.forEach(path -> {
@@ -25,6 +27,9 @@ public class SimpleAddonBlocksReader {
                     try {
 
                         JsonNode json = MAPPER.readTree(path.toFile()).get("minecraft:block");
+                        if (json == null) {
+                            return;
+                        }
                         String id = json.get("description").get("identifier").asText().split(":", 2)[1];
                         JsonNode node = json.get("components");
                         CustomBlockData.Builder blobkBuilder = CustomBlockData.builder();
@@ -68,6 +73,7 @@ public class SimpleAddonBlocksReader {
                                 }
                             }
                         }
+
                         dataList.add(blobkBuilder.components(componentsBuilder.build())
                                 .build());
 

@@ -34,15 +34,20 @@ public class GeyserItemBlockRegister implements Extension {
     @Subscribe
     public void onGeyserDefineCustomBlocksEvent(GeyserDefineCustomBlocksEvent event) throws IOException {
         SimpleAddonBlocksReader reader = new SimpleAddonBlocksReader();
-        List<CustomBlockData> blocks = reader.readBlocks(dataFolder());
+        List<CustomBlockData> blocks = reader.readBlocks(dataFolder(), logger());
         blocks.forEach(b -> {
-            event.register(b);
+            try {
+                event.register(b);
+            } catch (Throwable t) {
+
+            }
         });
     }
 
     @Subscribe
     public void onGeyserLoaded(GeyserPostInitializeEvent event) {
         logger().info("Replacing Items...");
+        logger().info("S:" + BlockRegistries.CUSTOM_BLOCKS.get().length);
         for (CustomBlockData customBlock : BlockRegistries.CUSTOM_BLOCKS.get()) {
             for (ItemMappings value : Registries.ITEMS.get().values()) {
                 ItemDefinition definition = value.getCustomBlockItemDefinitions().get(customBlock);
@@ -97,7 +102,7 @@ public class GeyserItemBlockRegister implements Extension {
         try {
             PlatformType type = GeyserImpl.getInstance().platformType();
 
-            String prefix = (type == PlatformType.STANDALONE || type == PlatformType.VELOCITY) ? "" : "org.geysermc.geyser.platform." + type.platformName().toLowerCase() + ".shaded.";
+            String prefix = (type == PlatformType.STANDALONE || type == PlatformType.VELOCITY || type == PlatformType.BUNGEECORD || type == PlatformType.SPIGOT) ? "" : "org.geysermc.geyser.platform." + type.platformName().toLowerCase() + ".shaded.";
 
             Class<?> pairClass = Class.forName(prefix + "it.unimi.dsi.fastutil.Pair");
             Method ofMethod = pairClass.getDeclaredMethod("of", Object.class, Object.class);
